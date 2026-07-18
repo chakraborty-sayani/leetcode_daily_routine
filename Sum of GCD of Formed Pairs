@@ -1,0 +1,23 @@
+class Solution(object):
+    def gcdSum(self, nums):
+        def gcd(nums,mxi):
+            while mxi:
+                nums,mxi=mxi,nums%mxi
+            return nums
+        n=len(nums)
+        mxi=nums[0]
+        prefixGcd=[]
+        for i in range(n):
+            mxi=max(mxi,nums[i])
+            prefixGcd.append(gcd(nums[i],mxi))
+        prefixGcd.sort()
+        l=0
+        r=n-1
+        sum=0
+        while l<r:
+            sum+=gcd(prefixGcd[l],prefixGcd[r])
+            l+=1
+            r-=1
+        return sum        
+      
+        
