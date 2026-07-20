@@ -1,0 +1,33 @@
+from collections import deque
+
+class Solution(object):
+    def canReach(self, start, target):
+     
+        if start == target:
+            return True
+        
+        moves = [(1,2),(2,1),(-1,2),(-2,1),(1,-2),(2,-1),(-1,-2),(-2,-1)]
+        
+        sx, sy = start[0], start[1]
+        tx, ty = target[0], target[1]
+        
+    
+        lo_x = min(sx, tx) - 6
+        hi_x = max(sx, tx) + 6
+        lo_y = min(sy, ty) - 6
+        hi_y = max(sy, ty) + 6
+        
+        visited = {(sx, sy)}
+        queue = deque([(sx, sy, 0)])
+        
+        while queue:
+            x, y, dist = queue.popleft()
+            for dx, dy in moves:
+                nx, ny = x+dx, y+dy
+                if (nx, ny) == (tx, ty):
+                    return (dist + 1) % 2 == 0
+                if lo_x <= nx <= hi_x and lo_y <= ny <= hi_y and (nx, ny) not in visited:
+                    visited.add((nx, ny))
+                    queue.append((nx, ny, dist+1))
+        
+        return False
