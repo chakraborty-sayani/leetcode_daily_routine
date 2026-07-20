@@ -1,0 +1,21 @@
+class Solution(object):
+    def countDominantNodes(self, root):
+       
+        self.count = 0
+        
+        def dfs(node):
+            if not node:
+                return float('-inf')  # so it doesn't affect max for missing children
+            
+            left_max = dfs(node.left)
+            right_max = dfs(node.right)
+            
+            subtree_max = max(node.val, left_max, right_max)
+            
+            if node.val == subtree_max:
+                self.count += 1
+            
+            return subtree_max
+        
+        dfs(root)
+        return self.count
