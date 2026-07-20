@@ -1,0 +1,39 @@
+class Solution(object):
+    def transformStr(self, s, strs):
+        n = len(s)
+        # prefix count of 1's in s
+        s_ones_prefix = [0] * (n + 1)
+        for i in range(n):
+            s_ones_prefix[i+1] = s_ones_prefix[i] + (1 if s[i] == '1' else 0)
+        total_ones_s = s_ones_prefix[n]
+        
+        ans = []
+        for t in strs:
+            forced_ones = t.count('1')
+            q_count = t.count('?')
+            
+            if not (forced_ones <= total_ones_s <= forced_ones + q_count):
+                ans.append(False)
+                continue
+            
+            need_ones_from_q = total_ones_s - forced_ones
+            
+         
+            q_positions = [i for i in range(n) if t[i] == '?']
+            ones_from_q_positions = set(q_positions[len(q_positions)-need_ones_from_q:]) if need_ones_from_q > 0 else set()
+            
+            t_prefix_ones = 0
+            valid = True
+            for i in range(n):
+                if t[i] == '1':
+                    t_prefix_ones += 1
+                elif t[i] == '?' and i in ones_from_q_positions:
+                    t_prefix_ones += 1
+                
+                if t_prefix_ones > s_ones_prefix[i+1]:
+                    valid = False
+                    break
+            
+            ans.append(valid)
+        
+        return ans
