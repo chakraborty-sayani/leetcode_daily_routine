@@ -1,0 +1,46 @@
+class Solution(object):
+    def minimumGroups(self, words):
+     
+
+        def least_rotation(s):
+            # Booth's algorithm: returns index of start of the
+            # lexicographically smallest rotation of s
+            n = len(s)
+            if n <= 1:
+                return 0
+            s2 = s + s
+            f = [-1] * (2 * n)
+            k = 0
+            for j in range(1, 2 * n):
+                sj = s2[j]
+                i = f[j - k - 1]
+                while i != -1 and sj != s2[k + i + 1]:
+                    if sj < s2[k + i + 1]:
+                        k = j - i - 1
+                    i = f[i]
+                if i == -1 and sj != s2[k]:
+                    if sj < s2[k]:
+                        k = j
+                    f[j - k] = -1
+                elif i == -1:
+                    f[j - k] = 0
+                else:
+                    f[j - k] = i + 1
+            return k
+
+        def canonical(s):
+            n = len(s)
+            if n == 0:
+                return ""
+            k = least_rotation(s)
+            s2 = s + s
+            return s2[k:k + n]
+
+        seen = set()
+        for w in words:
+            E = w[0::2]
+            O = w[1::2]
+            key = (canonical(E), canonical(O))
+            seen.add(key)
+
+        return len(seen)
